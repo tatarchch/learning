@@ -1,3 +1,3 @@
-module awesomeProject
+module learning
 
 go 1.26
