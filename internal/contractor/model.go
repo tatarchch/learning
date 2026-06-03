@@ -11,7 +11,7 @@ type Contractor struct {
 	inn  string
 }
 
-type createInput struct {
+type CreateInput struct {
 	name string
 	inn  string
 }

@@ -17,7 +17,7 @@ func NewService(r repository) *Service {
 	return &Service{r: r}
 }
 
-func (s *Service) Create(ctx context.Context, input createInput) (Contractor, error) {
+func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
 	contractor, err := NewContractor(input.name, input.inn)
 	if err != nil {
 		return Contractor{}, err
