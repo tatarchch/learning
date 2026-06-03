@@ -2,14 +2,7 @@ package contractor
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"strings"
-)
-
-var (
-	ErrNameRequired = errors.New("contractor name is required")
-	ErrInnRequired  = errors.New("contractor inn is required")
 )
 
 type Service struct {
@@ -24,21 +17,10 @@ func NewService(r repository) *Service {
 	return &Service{r: r}
 }
 
-func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
-	trimName := strings.TrimSpace(input.Name)
-	trimInn := strings.TrimSpace(input.INN)
-
-	if trimName == "" {
-		return Contractor{}, ErrNameRequired
-	}
-
-	if trimInn == "" {
-		return Contractor{}, ErrInnRequired
-	}
-
-	contractor := Contractor{
-		Name: trimName,
-		INN:  trimInn,
+func (s *Service) create(ctx context.Context, input createInput) (Contractor, error) {
+	contractor, err := newContractor(input.name, input.inn)
+	if err != nil {
+		return Contractor{}, err
 	}
 
 	created, err := s.r.Save(ctx, contractor)
