@@ -22,7 +22,7 @@ var (
 )
 
 // NewContractor validate name and inn strings
-// and return contractor
+// and return Contractor
 func NewContractor(name, inn string) (Contractor, error) {
 	name = normalizeName(name)
 	inn = normalizeINN(inn)
