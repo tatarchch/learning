@@ -6,7 +6,7 @@ import (
 )
 
 type Contractor struct {
-	ID   int
+	ID   int64
 	Name string
 	INN  string
 }
