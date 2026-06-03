@@ -6,14 +6,14 @@ import (
 )
 
 type Contractor struct {
-	id   int
-	name string
-	inn  string
+	ID   int
+	Name string
+	INN  string
 }
 
 type CreateInput struct {
-	name string
-	inn  string
+	Name string
+	INN  string
 }
 
 var (
@@ -35,7 +35,7 @@ func NewContractor(name, inn string) (Contractor, error) {
 		return Contractor{}, ErrInnRequired
 	}
 
-	return Contractor{name: name, inn: inn}, nil
+	return Contractor{Name: name, INN: inn}, nil
 }
 
 func (c *Contractor) rename(name string) error {
@@ -44,7 +44,7 @@ func (c *Contractor) rename(name string) error {
 		return ErrNameRequired
 	}
 
-	c.name = name
+	c.Name = name
 	return nil
 }
 
