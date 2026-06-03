@@ -18,7 +18,7 @@ type CreateInput struct {
 
 var (
 	ErrNameRequired = errors.New("contractor name is required")
-	ErrInnRequired  = errors.New("contractor inn is required")
+	ErrINNRequired  = errors.New("contractor inn is required")
 )
 
 // NewContractor validate name and inn strings
@@ -32,7 +32,7 @@ func NewContractor(name, inn string) (Contractor, error) {
 	}
 
 	if inn == "" {
-		return Contractor{}, ErrInnRequired
+		return Contractor{}, ErrINNRequired
 	}
 
 	return Contractor{Name: name, INN: inn}, nil

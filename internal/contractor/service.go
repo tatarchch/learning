@@ -6,15 +6,15 @@ import (
 )
 
 type Service struct {
-	r repository
+	repo repository
 }
 
-func NewService(r repository) *Service {
-	if r == nil {
+func NewService(repo repository) *Service {
+	if repo == nil {
 		panic("nil repository")
 	}
 
-	return &Service{r: r}
+	return &Service{repo: repo}
 }
 
 func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
@@ -23,7 +23,7 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, er
 		return Contractor{}, err
 	}
 
-	created, err := s.r.Save(ctx, contractor)
+	created, err := s.repo.Save(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("save contractor: %w", err)
 	}
