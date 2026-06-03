@@ -21,9 +21,9 @@ var (
 	ErrInnRequired  = errors.New("contractor inn is required")
 )
 
-// func newContractor validate name and inn strings
-// and return the pointer on the contract (cuz cant return the empty structure)
-func newContractor(name, inn string) (Contractor, error) {
+// NewContractor validate name and inn strings
+// and return contractor
+func NewContractor(name, inn string) (Contractor, error) {
 	name = normalizeName(name)
 	inn = normalizeINN(inn)
 
