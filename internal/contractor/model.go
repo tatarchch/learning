@@ -55,7 +55,9 @@ func (c *Contractor) ChangeINN(inn string) error {
 		return ErrINNRequired
 	}
 
-	return c.Rename(inn)
+	c.INN = inn
+
+	return nil
 }
 
 func normalizeName(name string) string {
