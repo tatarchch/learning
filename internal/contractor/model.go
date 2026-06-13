@@ -38,7 +38,7 @@ func NewContractor(name, inn string) (Contractor, error) {
 	return Contractor{Name: name, INN: inn}, nil
 }
 
-func (c *Contractor) rename(name string) error {
+func (c *Contractor) Rename(name string) error {
 	name = normalizeName(name)
 	if name == "" {
 		return ErrNameRequired
@@ -46,6 +46,16 @@ func (c *Contractor) rename(name string) error {
 
 	c.Name = name
 	return nil
+}
+
+func (c *Contractor) ChangeINN(inn string) error {
+	inn = normalizeINN(inn)
+
+	if inn == "" {
+		return ErrINNRequired
+	}
+
+	return c.Rename(inn)
 }
 
 func normalizeName(name string) string {
