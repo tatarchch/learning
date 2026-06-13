@@ -4,10 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"reflect"
 )
 
-var ErrInvalidId = errors.New("invalid ID. Id must be an integer and positive")
+var ErrInvalidID = errors.New("invalid ID. ID must be positive")
 
 type Service struct {
 	repo repository
@@ -36,8 +35,8 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, er
 }
 
 func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor, error) {
-	if id <= 0 || reflect.TypeOf(id).Name() != "int64" {
-		return Contractor{}, ErrInvalidId
+	if id <= 0 {
+		return Contractor{}, ErrInvalidID
 	}
 
 	contractor, err := s.repo.FindByID(ctx, id)
