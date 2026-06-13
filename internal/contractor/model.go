@@ -38,7 +38,7 @@ func NewContractor(name, inn string) (Contractor, error) {
 }
 
 func (c *Contractor) Rename(name string) error {
-	name = normalizeName(name)
+	name = strings.TrimSpace(name)
 	if name == "" {
 		return ErrNameRequired
 	}
@@ -48,7 +48,7 @@ func (c *Contractor) Rename(name string) error {
 }
 
 func (c *Contractor) ChangeINN(inn string) error {
-	inn = normalizeINN(inn)
+	inn = strings.TrimSpace(inn)
 
 	if inn == "" {
 		return ErrINNRequired
@@ -56,12 +56,4 @@ func (c *Contractor) ChangeINN(inn string) error {
 
 	c.INN = inn
 	return nil
-}
-
-func normalizeName(name string) string {
-	return strings.TrimSpace(name)
-}
-
-func normalizeINN(inn string) string {
-	return strings.TrimSpace(inn)
 }
