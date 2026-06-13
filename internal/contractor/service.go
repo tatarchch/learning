@@ -40,19 +40,19 @@ func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor
 		return Contractor{}, ErrInvalidId
 	}
 
-	contractor, err := s.repo.FindById(ctx, id)
+	contractor, err := s.repo.FindByID(ctx, id)
 	if err != nil {
-		return Contractor{}, err
+		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
 	}
 
 	err = contractor.Rename(name)
 	if err != nil {
-		return Contractor{}, err
+		return Contractor{}, fmt.Errorf("rename contractor: %w", err)
 	}
 
-	contractor, err = s.repo.Save(ctx, contractor)
+	contractor, err = s.repo.Update(ctx, contractor)
 	if err != nil {
-		return Contractor{}, err
+		return Contractor{}, fmt.Errorf("update contractor: %w", err)
 	}
 
 	return contractor, nil
