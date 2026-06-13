@@ -24,18 +24,17 @@ var (
 // NewContractor validate name and inn strings
 // and return Contractor
 func NewContractor(name, inn string) (Contractor, error) {
-	name = normalizeName(name)
-	inn = normalizeINN(inn)
+	var c Contractor
 
-	if name == "" {
-		return Contractor{}, ErrNameRequired
+	if err := c.Rename(name); err != nil {
+		return Contractor{}, err
 	}
 
-	if inn == "" {
-		return Contractor{}, ErrINNRequired
+	if err := c.ChangeINN(inn); err != nil {
+		return Contractor{}, err
 	}
 
-	return Contractor{Name: name, INN: inn}, nil
+	return c, nil
 }
 
 func (c *Contractor) Rename(name string) error {
@@ -56,7 +55,6 @@ func (c *Contractor) ChangeINN(inn string) error {
 	}
 
 	c.INN = inn
-
 	return nil
 }
 
