@@ -6,14 +6,9 @@ import (
 )
 
 type Contractor struct {
-	ID   int64
-	Name string
-	INN  string
-}
-
-type CreateInput struct {
-	Name string
-	INN  string
+	id   int64
+	name string
+	inn  string
 }
 
 var (
@@ -21,8 +16,7 @@ var (
 	ErrINNRequired  = errors.New("contractor inn is required")
 )
 
-// NewContractor validate name and inn strings
-// and return Contractor
+// NewContractor validates the name and INN and returns a Contractor.
 func NewContractor(name, inn string) (Contractor, error) {
 	var c Contractor
 
@@ -37,13 +31,25 @@ func NewContractor(name, inn string) (Contractor, error) {
 	return c, nil
 }
 
+func (c Contractor) ID() int64 {
+	return c.id
+}
+
+func (c Contractor) Name() string {
+	return c.name
+}
+
+func (c Contractor) INN() string {
+	return c.inn
+}
+
 func (c *Contractor) Rename(name string) error {
 	name = strings.TrimSpace(name)
 	if name == "" {
 		return ErrNameRequired
 	}
 
-	c.Name = name
+	c.name = name
 	return nil
 }
 
@@ -54,6 +60,6 @@ func (c *Contractor) ChangeINN(inn string) error {
 		return ErrINNRequired
 	}
 
-	c.INN = inn
+	c.inn = inn
 	return nil
 }
