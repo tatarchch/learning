@@ -20,11 +20,11 @@ type CreateInput struct {
 
 func NewService(creatorRepo creatorRepository, renamerRepo renamerRepository) *Service {
 	if creatorRepo == nil {
-		panic("nil repository")
+		panic("nil creatorRepository")
 	}
 
 	if renamerRepo == nil {
-		panic("nil repository")
+		panic("nil renamerRepository")
 	}
 
 	return &Service{creatorRepo: creatorRepo, renamerRepo: renamerRepo}

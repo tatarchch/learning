@@ -6,9 +6,10 @@ import (
 )
 
 type Contractor struct {
-	id   int64
-	name string
-	inn  string
+	id          int64
+	name        string
+	inn         string
+	description string
 }
 
 var (
@@ -43,6 +44,10 @@ func (c Contractor) INN() string {
 	return c.inn
 }
 
+func (c Contractor) Description() string {
+	return c.description
+}
+
 func (c *Contractor) Rename(name string) error {
 	name = strings.TrimSpace(name)
 	if name == "" {
@@ -62,4 +67,11 @@ func (c *Contractor) ChangeINN(inn string) error {
 
 	c.inn = inn
 	return nil
+}
+
+func (c *Contractor) ChangeDescription(description string) {
+	description = strings.TrimSpace(description)
+
+	c.description = description
+	return
 }
