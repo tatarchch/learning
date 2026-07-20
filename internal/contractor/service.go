@@ -6,7 +6,10 @@ import (
 	"fmt"
 )
 
-var ErrInvalidID = errors.New("contractor ID must be positive")
+var (
+	ErrInvalidID        = errors.New("contractor ID must be positive")
+	ErrContractNotFound = errors.New("contractor not found")
+)
 
 type Service struct {
 	creatorRepo creatorRepository
@@ -62,6 +65,22 @@ func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor
 	contractor, err = s.renamerRepo.Update(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("update contractor: %w", err)
+	}
+
+	return contractor, nil
+}
+func (s *Service) GetByID(ctx context.Context, id int64) (Contractor, error) {
+	if id <= 0 {
+		return Contractor{}, ErrInvalidID
+	}
+
+	contractor, err := s.renamerRepo.FindByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, ErrContractNotFound) {
+			return Contractor{}, fmt.Errorf("find contractor by id: %w", ErrContractNotFound)
+		}
+
+		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
 	}
 
 	return contractor, nil
