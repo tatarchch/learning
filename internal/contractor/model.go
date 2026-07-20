@@ -1,7 +1,6 @@
 package contractor
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -11,11 +10,6 @@ type Contractor struct {
 	inn         string
 	description string
 }
-
-var (
-	ErrNameRequired = errors.New("contractor name is required")
-	ErrINNRequired  = errors.New("contractor inn is required")
-)
 
 // NewContractor validates the name and INN and returns a Contractor.
 func NewContractor(name, inn string) (Contractor, error) {

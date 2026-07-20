@@ -6,11 +6,6 @@ import (
 	"fmt"
 )
 
-var (
-	ErrInvalidID        = errors.New("contractor ID must be positive")
-	ErrContractNotFound = errors.New("contractor not found")
-)
-
 type Service struct {
 	creatorRepo creatorRepository
 	renamerRepo renamerRepository
