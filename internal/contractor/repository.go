@@ -2,11 +2,19 @@ package contractor
 
 import "context"
 
-type creatorRepository interface {
+type saverRepository interface {
 	Save(ctx context.Context, contractor Contractor) (Contractor, error)
 }
 
-type renamerRepository interface {
+type getterRepository interface {
 	FindByID(ctx context.Context, id int64) (Contractor, error)
+}
+
+type updaterRepository interface {
 	Update(ctx context.Context, contractor Contractor) (Contractor, error)
+}
+
+type renamerRepository interface {
+	getterRepository
+	updaterRepository
 }

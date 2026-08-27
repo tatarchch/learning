@@ -7,7 +7,8 @@ import (
 )
 
 type Service struct {
-	creatorRepo creatorRepository
+	saverRepo   saverRepository
+	getterRepo  getterRepository
 	renamerRepo renamerRepository
 }
 
@@ -16,16 +17,24 @@ type CreateInput struct {
 	INN  string
 }
 
-func NewService(creatorRepo creatorRepository, renamerRepo renamerRepository) *Service {
-	if creatorRepo == nil {
+func NewService(saverRepo saverRepository, getterRepo getterRepository, renamerRepo renamerRepository) *Service {
+	if saverRepo == nil {
 		panic("nil creatorRepository")
+	}
+
+	if getterRepo == nil {
+		panic("nil getterRepository")
 	}
 
 	if renamerRepo == nil {
 		panic("nil renamerRepository")
 	}
 
-	return &Service{creatorRepo: creatorRepo, renamerRepo: renamerRepo}
+	return &Service{
+		saverRepo:   saverRepo,
+		getterRepo:  getterRepo,
+		renamerRepo: renamerRepo,
+	}
 }
 
 func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
@@ -34,12 +43,29 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, er
 		return Contractor{}, err
 	}
 
-	created, err := s.creatorRepo.Save(ctx, contractor)
+	created, err := s.saverRepo.Save(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("save contractor: %w", err)
 	}
 
 	return created, nil
+}
+
+func (s *Service) GetByID(ctx context.Context, id int64) (Contractor, error) {
+	if id <= 0 {
+		return Contractor{}, ErrInvalidID
+	}
+
+	contractor, err := s.getterRepo.FindByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, ErrContractNotFound) {
+			return Contractor{}, fmt.Errorf("find contractor by id: %w", ErrContractNotFound)
+		}
+
+		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
+	}
+
+	return contractor, nil
 }
 
 func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor, error) {
@@ -60,22 +86,6 @@ func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor
 	contractor, err = s.renamerRepo.Update(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("update contractor: %w", err)
-	}
-
-	return contractor, nil
-}
-func (s *Service) GetByID(ctx context.Context, id int64) (Contractor, error) {
-	if id <= 0 {
-		return Contractor{}, ErrInvalidID
-	}
-
-	contractor, err := s.renamerRepo.FindByID(ctx, id)
-	if err != nil {
-		if errors.Is(err, ErrContractNotFound) {
-			return Contractor{}, fmt.Errorf("find contractor by id: %w", ErrContractNotFound)
-		}
-
-		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
 	}
 
 	return contractor, nil
