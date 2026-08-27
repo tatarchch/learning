@@ -2,14 +2,11 @@ package contractor
 
 import (
 	"context"
-	"errors"
 	"fmt"
 )
 
 type Service struct {
-	saverRepo   saverRepository
-	getterRepo  getterRepository
-	renamerRepo renamerRepository
+	repo repository
 }
 
 type CreateInput struct {
@@ -17,24 +14,12 @@ type CreateInput struct {
 	INN  string
 }
 
-func NewService(saverRepo saverRepository, getterRepo getterRepository, renamerRepo renamerRepository) *Service {
-	if saverRepo == nil {
-		panic("nil creatorRepository")
+func NewService(repo repository) *Service {
+	if repo == nil {
+		panic("nil repository")
 	}
 
-	if getterRepo == nil {
-		panic("nil getterRepository")
-	}
-
-	if renamerRepo == nil {
-		panic("nil renamerRepository")
-	}
-
-	return &Service{
-		saverRepo:   saverRepo,
-		getterRepo:  getterRepo,
-		renamerRepo: renamerRepo,
-	}
+	return &Service{repo: repo}
 }
 
 func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
@@ -43,7 +28,7 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, er
 		return Contractor{}, err
 	}
 
-	created, err := s.saverRepo.Save(ctx, contractor)
+	created, err := s.repo.Save(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("save contractor: %w", err)
 	}
@@ -56,12 +41,8 @@ func (s *Service) GetByID(ctx context.Context, id int64) (Contractor, error) {
 		return Contractor{}, ErrInvalidID
 	}
 
-	contractor, err := s.getterRepo.FindByID(ctx, id)
+	contractor, err := s.repo.FindByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, ErrContractNotFound) {
-			return Contractor{}, fmt.Errorf("find contractor by id: %w", ErrContractNotFound)
-		}
-
 		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
 	}
 
@@ -73,7 +54,7 @@ func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor
 		return Contractor{}, ErrInvalidID
 	}
 
-	contractor, err := s.renamerRepo.FindByID(ctx, id)
+	contractor, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("find contractor by id: %w", err)
 	}
@@ -83,7 +64,7 @@ func (s *Service) Rename(ctx context.Context, id int64, name string) (Contractor
 		return Contractor{}, fmt.Errorf("rename contractor: %w", err)
 	}
 
-	contractor, err = s.renamerRepo.Update(ctx, contractor)
+	contractor, err = s.repo.Update(ctx, contractor)
 	if err != nil {
 		return Contractor{}, fmt.Errorf("update contractor: %w", err)
 	}

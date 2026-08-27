@@ -1,6 +1,8 @@
 package contractor
 
-import "context"
+import (
+	"context"
+)
 
 type saverRepository interface {
 	Save(ctx context.Context, contractor Contractor) (Contractor, error)
@@ -14,7 +16,8 @@ type updaterRepository interface {
 	Update(ctx context.Context, contractor Contractor) (Contractor, error)
 }
 
-type renamerRepository interface {
+type repository interface {
+	saverRepository
 	getterRepository
 	updaterRepository
 }
