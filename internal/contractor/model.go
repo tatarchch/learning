@@ -11,8 +11,8 @@ type Contractor struct {
 	description string
 }
 
-// NewContractor validates the name and INN and returns a Contractor.
-func NewContractor(name, inn string) (Contractor, error) {
+// New validates the name and INN and returns a Contractor.
+func New(name, inn string) (Contractor, error) {
 	var c Contractor
 
 	if err := c.Rename(name); err != nil {

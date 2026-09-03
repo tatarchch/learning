@@ -11,7 +11,7 @@ func (c *Contractor) renameByPointer(name string) {
 }
 
 func TestValueReceiverDoesNotChangeOriginal(t *testing.T) {
-	c, err := NewContractor("Old Name", "123")
+	c, err := New("Old Name", "123")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func TestValueReceiverDoesNotChangeOriginal(t *testing.T) {
 }
 
 func TestPointerReceiverChangesOriginal(t *testing.T) {
-	c, err := NewContractor("Old Name", "123")
+	c, err := New("Old Name", "123")
 	if err != nil {
 		t.Fatal(err)
 	}

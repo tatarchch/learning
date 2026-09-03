@@ -23,7 +23,7 @@ func NewService(repo repository) *Service {
 }
 
 func (s *Service) Create(ctx context.Context, input CreateInput) (Contractor, error) {
-	contractor, err := NewContractor(input.Name, input.INN)
+	contractor, err := New(input.Name, input.INN)
 	if err != nil {
 		return Contractor{}, err
 	}

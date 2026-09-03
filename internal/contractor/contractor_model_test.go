@@ -3,7 +3,7 @@ package contractor
 import "testing"
 
 func TestContractor_ChangeDescription_WithValue(t *testing.T) {
-	c, err := NewContractor("Old Name", "123")
+	c, err := New("Old Name", "123")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -16,7 +16,7 @@ func TestContractor_ChangeDescription_WithValue(t *testing.T) {
 }
 
 func TestContractor_ChangeDescription_WithEmpty(t *testing.T) {
-	c, err := NewContractor("Old Name", "123")
+	c, err := New("Old Name", "123")
 	if err != nil {
 		t.Fatal(err)
 	}
