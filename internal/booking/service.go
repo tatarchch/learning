@@ -2,8 +2,6 @@ package booking
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 )
@@ -49,10 +47,6 @@ func (s *Service) GetByReference(ctx context.Context, reference string) (Booking
 	}
 
 	booking, err := s.repo.FindByReference(ctx, reference)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return Booking{}, ErrNotFound
-	}
 
 	if err != nil {
 		return Booking{}, fmt.Errorf("find booking: %w", err)
