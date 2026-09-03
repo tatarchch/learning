@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+type repository interface {
+	Save(ctx context.Context, contractor Contractor) (Contractor, error)
+	FindByID(ctx context.Context, id int64) (Contractor, error)
+	Update(ctx context.Context, contractor Contractor) (Contractor, error)
+}
+
 type Service struct {
 	repo repository
 }
