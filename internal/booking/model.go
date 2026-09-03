@@ -10,7 +10,7 @@ type Booking struct {
 	bookedAt    time.Time
 }
 
-// New validates the name and INN and returns a Booking.
+// New validates the reference, totalAmount and bookedAt and returns a Booking.
 func New(reference string, totalAmount int, bookedAt time.Time) (Booking, error) {
 
 	if len(reference) != 6 {

@@ -7,7 +7,7 @@ import (
 )
 
 type repository interface {
-	Save(ctx context.Context, contractor Booking) (Booking, error)
+	Save(ctx context.Context, booking Booking) (Booking, error)
 	FindByReference(ctx context.Context, reference string) (Booking, error)
 }
 
@@ -42,7 +42,7 @@ func (s *Service) Create(ctx context.Context,
 }
 
 func (s *Service) GetByReference(ctx context.Context, reference string) (Booking, error) {
-	if reference == "" {
+	if len(reference) != 6 {
 		return Booking{}, ErrInvalidReference
 	}
 
