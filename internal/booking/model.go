@@ -65,3 +65,14 @@ func (b Booking) Clone() Booking {
 		metadata,
 	}
 }
+
+func (b *Booking) ClearMetadata() {
+	b.metadata = make(map[string]string)
+}
+
+func (b Booking) ClearedMetadata() Booking {
+	cleared := b.Clone()
+	cleared.ClearMetadata()
+
+	return cleared
+}

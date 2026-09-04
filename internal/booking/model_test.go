@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestBookingCopySharesMetadata(t *testing.T) {
+func TestCopySharesMetadata(t *testing.T) {
 	original, err := New("ABC123", 1000, time.Now())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
@@ -24,7 +24,7 @@ func TestBookingCopySharesMetadata(t *testing.T) {
 	}
 }
 
-func TestBookingCloneHasIndependentMetadata(t *testing.T) {
+func TestCloneHasIndependentMetadata(t *testing.T) {
 	original, err := New("ABC123", 1000, time.Now())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
@@ -60,15 +60,57 @@ func TestBookingCloneHasIndependentMetadata(t *testing.T) {
 		want := "mobile"
 
 		if got != want {
-			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "device", got, want)
 		}
 
 		got = original.Metadata("device")
 		want = ""
 
 		if got != want {
-			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "device", got, want)
+		}
+	})
+}
+
+func TestClearedMetadata(t *testing.T) {
+	t.Run("cleared metadata by pointer receiver", func(t *testing.T) {
+		original, err := New("ABC123", 1000, time.Now())
+		if err != nil {
+			t.Fatalf("New() error = %v", err)
+		}
+
+		p := &original
+		p.SetMetadata("source", "web") //mb simple use p.SetMetadata without p := &original
+		original.ClearMetadata()
+
+		got := len(original.metadata)
+		want := 0
+
+		if got != want {
+			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
 		}
 	})
 
+	t.Run("new Booking with cleared metadata", func(t *testing.T) {
+		original, err := New("ABC123", 1000, time.Now())
+		if err != nil {
+			t.Fatalf("New() error = %v", err)
+		}
+
+		original.SetMetadata("source", "web")
+
+		valueBooking := original.ClearedMetadata()
+
+		got := len(original.metadata)
+		want := 1
+		if got != want {
+			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
+		}
+
+		got = len(valueBooking.metadata)
+		want = 0
+		if got != want {
+			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
+		}
+	})
 }
