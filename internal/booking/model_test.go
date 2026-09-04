@@ -33,12 +33,41 @@ func TestBookingCloneHasIndependentMetadata(t *testing.T) {
 	original.SetMetadata("source", "web")
 
 	cloned := original.Clone()
-	cloned.SetMetadata("source", "random")
 
-	got := original.Metadata("source")
-	have := cloned.Metadata("source")
+	t.Run("source doesn`t change original", func(t *testing.T) {
+		cloned.SetMetadata("source", "random")
 
-	if got == have {
-		t.Errorf("got %q, have %q", got, have)
-	}
+		got := original.Metadata("source")
+		want := "web"
+
+		if got != want {
+			t.Errorf("got %q, have %q", got, want)
+		}
+
+		got = cloned.Metadata("source")
+		want = "random"
+
+		if got != want {
+			t.Errorf("got %q, have %q", got, want)
+		}
+	})
+
+	t.Run("source doesn`t add at original", func(t *testing.T) {
+		cloned.SetMetadata("device", "mobile")
+
+		got := cloned.Metadata("device")
+		want := "mobile"
+
+		if got != want {
+			t.Errorf("got %q, have %q", got, want)
+		}
+
+		got = original.Metadata("device")
+		want = ""
+
+		if got != want {
+			t.Errorf("got %q, have %q", got, want)
+		}
+	})
+
 }
