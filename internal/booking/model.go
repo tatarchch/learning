@@ -71,8 +71,6 @@ func (b *Booking) ClearMetadata() {
 }
 
 func (b Booking) ClearedMetadata() Booking {
-	cleared := b.Clone()
-	cleared.ClearMetadata()
-
-	return cleared
+	b.metadata = make(map[string]string)
+	return b
 }

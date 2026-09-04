@@ -79,15 +79,14 @@ func TestClearedMetadata(t *testing.T) {
 			t.Fatalf("New() error = %v", err)
 		}
 
-		p := &original
-		p.SetMetadata("source", "web") //mb simple use p.SetMetadata without p := &original
+		original.SetMetadata("source", "web")
 		original.ClearMetadata()
 
-		got := len(original.metadata)
-		want := 0
+		got := original.Metadata("source")
+		want := ""
 
 		if got != want {
-			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 	})
 
@@ -101,16 +100,16 @@ func TestClearedMetadata(t *testing.T) {
 
 		valueBooking := original.ClearedMetadata()
 
-		got := len(original.metadata)
-		want := 1
+		got := original.Metadata("source")
+		want := "web"
 		if got != want {
-			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 
-		got = len(valueBooking.metadata)
-		want = 0
+		got = valueBooking.Metadata("source")
+		want = ""
 		if got != want {
-			t.Errorf("Metadata(%q) = %d, want %d", "source", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 	})
 }
