@@ -25,7 +25,7 @@ func NewService(repo repository) *Service {
 
 func (s *Service) Create(ctx context.Context,
 	reference string,
-	totalAmount int,
+	totalAmount int64,
 	bookedAt time.Time,
 ) (Booking, error) {
 	booking, err := New(reference, totalAmount, bookedAt)
