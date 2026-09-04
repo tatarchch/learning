@@ -20,7 +20,7 @@ func TestBookingCopySharesMetadata(t *testing.T) {
 	want := "random"
 
 	if got != want {
-		t.Errorf("got %q, want %q", got, want)
+		t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 	}
 }
 
@@ -34,39 +34,40 @@ func TestBookingCloneHasIndependentMetadata(t *testing.T) {
 
 	cloned := original.Clone()
 
-	t.Run("source doesn`t change original", func(t *testing.T) {
-		cloned.SetMetadata("source", "random")
+	cloned.SetMetadata("source", "random")
+	cloned.SetMetadata("device", "mobile")
+
+	t.Run("changing existing metadata does not affect original", func(t *testing.T) {
 
 		got := original.Metadata("source")
 		want := "web"
 
 		if got != want {
-			t.Errorf("got %q, have %q", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 
 		got = cloned.Metadata("source")
 		want = "random"
 
 		if got != want {
-			t.Errorf("got %q, have %q", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 	})
 
-	t.Run("source doesn`t add at original", func(t *testing.T) {
-		cloned.SetMetadata("device", "mobile")
+	t.Run("adding metadata does not affect original", func(t *testing.T) {
 
 		got := cloned.Metadata("device")
 		want := "mobile"
 
 		if got != want {
-			t.Errorf("got %q, have %q", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 
 		got = original.Metadata("device")
 		want = ""
 
 		if got != want {
-			t.Errorf("got %q, have %q", got, want)
+			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 	})
 
