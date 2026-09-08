@@ -88,6 +88,6 @@ func (b Booking) Passengers() []string {
 	return b.passengers
 }
 
-func (b Booking) FirstPasangers(n int) []string {
+func (b Booking) FirstPassengers(n int) []string {
 	return b.passengers[:n]
 }

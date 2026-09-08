@@ -208,7 +208,7 @@ func TestFirstPassengers(t *testing.T) {
 
 	t.Run("len cap def", func(t *testing.T) {
 
-		part := booking.FirstPasangers(2)
+		part := booking.FirstPassengers(2)
 		want := 2
 		got := len(part)
 		if got != want {
@@ -216,14 +216,14 @@ func TestFirstPassengers(t *testing.T) {
 		}
 
 		want = 4
-		got = cap(booking.passengers)
+		got = cap(part)
 		if got != want {
 			t.Errorf("FirstPassengers() cap = %d, want %d", got, want)
 		}
 	})
 
 	t.Run("append dangerous with mount back array", func(t *testing.T) {
-		part := booking.FirstPasangers(2)
+		part := booking.FirstPassengers(2)
 		part = append(part, "Eve")
 
 		got := booking.Passengers()[2]
@@ -233,7 +233,7 @@ func TestFirstPassengers(t *testing.T) {
 		}
 	})
 
-	t.Run("reallocation with unmount back array", func(t *testing.T) {
+	t.Run("reallocation with reallocated backing array", func(t *testing.T) {
 		all := booking.Passengers()
 		all = append(all, "Eve")
 		all[0] = "Change"
@@ -251,7 +251,7 @@ func TestFirstPassengers(t *testing.T) {
 		}
 	})
 
-	t.Run("reallocation with mount back array with max cap in subslice", func(t *testing.T) {
+	t.Run("reallocation with shared backing array with max cap in subslice", func(t *testing.T) {
 		newBooking, err := New("ABC157", 200, time.Now())
 		if err != nil {
 			t.Fatalf("New() error = %v", err)
@@ -274,7 +274,7 @@ func TestFirstPassengers(t *testing.T) {
 			t.Errorf("newBooking.Passengers()[0] = %s, want %s", got, want)
 		}
 
-		got = booking.Passengers()[2]
+		got = newBooking.Passengers()[2]
 		want = "Charlie"
 		if got != want {
 			t.Errorf("newBooking.Passengers()[2] = %s, want %s", got, want)
