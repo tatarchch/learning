@@ -11,7 +11,7 @@ type Booking struct {
 	totalAmount int64
 	bookedAt    time.Time
 	metadata    map[string]string
-	passenger   []string
+	passengers  []string
 }
 
 // New validates the reference, totalAmount and bookedAt and returns a Booking.
@@ -60,9 +60,7 @@ func (b Booking) Metadata(key string) string {
 func (b Booking) Clone() Booking {
 	metadata := make(map[string]string)
 	maps.Copy(metadata, b.metadata)
-
-	passenger := make([]string, 0, len(b.passenger))
-	passenger = slices.Clone(b.passenger)
+	passenger := slices.Clone(b.passengers)
 
 	return Booking{
 		b.reference,
@@ -83,9 +81,9 @@ func (b Booking) ClearedMetadata() Booking {
 }
 
 func (b *Booking) AddPassenger(name string) {
-	b.passenger = append(b.passenger, name)
+	b.passengers = append(b.passengers, name)
 }
 
-func (b Booking) Passenger() []string {
-	return b.passenger
+func (b Booking) Passengers() []string {
+	return b.passengers
 }

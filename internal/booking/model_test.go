@@ -114,7 +114,7 @@ func TestClearedMetadata(t *testing.T) {
 	})
 }
 
-func TestPassenger(t *testing.T) {
+func TestPassengers(t *testing.T) {
 	booking, err := New("ABC123", 2000, time.Now())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
@@ -122,13 +122,13 @@ func TestPassenger(t *testing.T) {
 
 	t.Run("len cap def", func(t *testing.T) {
 		want := 0
-		got := len(booking.passenger)
+		got := len(booking.passengers)
 		if got != want {
 			t.Errorf("Passenger length = %d, want %d", got, want)
 		}
 
+		got = cap(booking.passengers)
 		want = 4
-		got = cap(booking.passenger)
 		if got != want {
 			t.Errorf("Passenger cap = %d, want %d", got, want)
 		}
@@ -136,29 +136,29 @@ func TestPassenger(t *testing.T) {
 		booking.AddPassenger("Alice")
 		booking.AddPassenger("Bob")
 
+		got = len(booking.passengers)
 		want = 2
-		got = len(booking.passenger)
 		if got != want {
 			t.Errorf("Passenger length = %d, want %d", got, want)
 		}
 
+		got = cap(booking.passengers)
 		want = 4
-		got = cap(booking.passenger)
 		if got != want {
 			t.Errorf("Passenger cap = %d, want %d", got, want)
 		}
 	})
 
 	t.Run("len cap names", func(t *testing.T) {
+		got := booking.passengers[0]
 		want := "Alice"
-		got := booking.passenger[0]
 
 		if got != want {
 			t.Errorf("Passenger name[0] = %s, want %s", got, want)
 		}
 
+		got = booking.passengers[1]
 		want = "Bob"
-		got = booking.passenger[1]
 
 		if got != want {
 			t.Errorf("Passenger name[1] = %s, want %s", got, want)
@@ -166,11 +166,11 @@ func TestPassenger(t *testing.T) {
 	})
 
 	t.Run("shared backing array", func(t *testing.T) {
-		passenger := booking.passenger
-		passenger[0] = "Charlie"
+		passengers := booking.passengers
+		passengers[0] = "Charlie"
 
+		got := booking.Passengers()[0]
 		want := "Charlie"
-		got := passenger[0]
 
 		if got != want {
 			t.Errorf("Passenger cap = %s, want %s", got, want)
@@ -178,19 +178,19 @@ func TestPassenger(t *testing.T) {
 	})
 
 	t.Run("reslice", func(t *testing.T) {
-		passenger := booking.passenger
-		passenger = passenger[:1]
+		passengers := booking.passengers
+		passengers = passengers[:1]
 
 		want := 1
-		got := len(passenger)
+		got := len(passengers)
 		if got != want {
-			t.Errorf("Passenger cap = %d, want %d", got, want)
+			t.Errorf("Passenger len = %d, want %d", got, want)
 		}
 
 		want = 2
-		got = len(booking.passenger)
+		got = len(booking.passengers)
 		if got != want {
-			t.Errorf("Booking.passenger cap = %d, want %d", got, want)
+			t.Errorf("Booking.passenger len = %d, want %d", got, want)
 		}
 	})
 
