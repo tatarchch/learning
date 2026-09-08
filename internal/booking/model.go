@@ -60,14 +60,14 @@ func (b Booking) Metadata(key string) string {
 func (b Booking) Clone() Booking {
 	metadata := make(map[string]string)
 	maps.Copy(metadata, b.metadata)
-	passenger := slices.Clone(b.passengers)
+	passengers := slices.Clone(b.passengers)
 
 	return Booking{
 		b.reference,
 		b.totalAmount,
 		b.bookedAt,
 		metadata,
-		passenger,
+		passengers,
 	}
 }
 
@@ -86,4 +86,8 @@ func (b *Booking) AddPassenger(name string) {
 
 func (b Booking) Passengers() []string {
 	return b.passengers
+}
+
+func (b Booking) FirstPasangers(n int) []string {
+	return b.passengers[:n]
 }
