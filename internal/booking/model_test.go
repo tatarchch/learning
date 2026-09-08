@@ -98,7 +98,7 @@ func TestClearedMetadata(t *testing.T) {
 
 		original.SetMetadata("source", "web")
 
-		valueBooking := original.ClearedMetadata()
+		cleared := original.ClearedMetadata()
 
 		got := original.Metadata("source")
 		want := "web"
@@ -106,10 +106,92 @@ func TestClearedMetadata(t *testing.T) {
 			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 
-		got = valueBooking.Metadata("source")
+		got = cleared.Metadata("source")
 		want = ""
 		if got != want {
 			t.Errorf("Metadata(%q) = %q, want %q", "source", got, want)
 		}
 	})
+}
+
+func TestPassenger(t *testing.T) {
+	booking, err := New("ABC123", 2000, time.Now())
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+
+	t.Run("len cap def", func(t *testing.T) {
+		want := 0
+		got := len(booking.passenger)
+		if got != want {
+			t.Errorf("Passenger length = %d, want %d", got, want)
+		}
+
+		want = 4
+		got = cap(booking.passenger)
+		if got != want {
+			t.Errorf("Passenger cap = %d, want %d", got, want)
+		}
+
+		booking.AddPassenger("Alice")
+		booking.AddPassenger("Bob")
+
+		want = 2
+		got = len(booking.passenger)
+		if got != want {
+			t.Errorf("Passenger length = %d, want %d", got, want)
+		}
+
+		want = 4
+		got = cap(booking.passenger)
+		if got != want {
+			t.Errorf("Passenger cap = %d, want %d", got, want)
+		}
+	})
+
+	t.Run("len cap names", func(t *testing.T) {
+		want := "Alice"
+		got := booking.passenger[0]
+
+		if got != want {
+			t.Errorf("Passenger name[0] = %s, want %s", got, want)
+		}
+
+		want = "Bob"
+		got = booking.passenger[1]
+
+		if got != want {
+			t.Errorf("Passenger name[1] = %s, want %s", got, want)
+		}
+	})
+
+	t.Run("shared backing array", func(t *testing.T) {
+		passenger := booking.passenger
+		passenger[0] = "Charlie"
+
+		want := "Charlie"
+		got := passenger[0]
+
+		if got != want {
+			t.Errorf("Passenger cap = %s, want %s", got, want)
+		}
+	})
+
+	t.Run("reslice", func(t *testing.T) {
+		passenger := booking.passenger
+		passenger = passenger[:1]
+
+		want := 1
+		got := len(passenger)
+		if got != want {
+			t.Errorf("Passenger cap = %d, want %d", got, want)
+		}
+
+		want = 2
+		got = len(booking.passenger)
+		if got != want {
+			t.Errorf("Booking.passenger cap = %d, want %d", got, want)
+		}
+	})
+
 }

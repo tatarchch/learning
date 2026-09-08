@@ -2,6 +2,7 @@ package booking
 
 import (
 	"maps"
+	"slices"
 	"time"
 )
 
@@ -10,6 +11,7 @@ type Booking struct {
 	totalAmount int64
 	bookedAt    time.Time
 	metadata    map[string]string
+	passenger   []string
 }
 
 // New validates the reference, totalAmount and bookedAt and returns a Booking.
@@ -31,6 +33,7 @@ func New(reference string, totalAmount int64, bookedAt time.Time) (Booking, erro
 		totalAmount,
 		bookedAt,
 		make(map[string]string),
+		make([]string, 0, 4),
 	}, nil
 }
 
@@ -58,11 +61,15 @@ func (b Booking) Clone() Booking {
 	metadata := make(map[string]string)
 	maps.Copy(metadata, b.metadata)
 
+	passenger := make([]string, 0, len(b.passenger))
+	passenger = slices.Clone(b.passenger)
+
 	return Booking{
 		b.reference,
 		b.totalAmount,
 		b.bookedAt,
 		metadata,
+		passenger,
 	}
 }
 
@@ -73,4 +80,12 @@ func (b *Booking) ClearMetadata() {
 func (b Booking) ClearedMetadata() Booking {
 	b.metadata = make(map[string]string)
 	return b
+}
+
+func (b *Booking) AddPassenger(name string) {
+	b.passenger = append(b.passenger, name)
+}
+
+func (b Booking) Passenger() []string {
+	return b.passenger
 }
