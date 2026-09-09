@@ -85,9 +85,5 @@ func (b *Booking) AddPassenger(name string) {
 }
 
 func (b Booking) Passengers() []string {
-	return b.passengers
-}
-
-func (b Booking) FirstPassengers(n int) []string {
-	return b.passengers[:n]
+	return slices.Clone(b.passengers)
 }
