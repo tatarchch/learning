@@ -2,8 +2,10 @@ package booking
 
 import (
 	"maps"
+	"slices"
 	"testing"
 	"time"
+	"unicode/utf8"
 )
 
 func TestCopySharesMetadata(t *testing.T) {
@@ -296,4 +298,94 @@ func TestMapAssignment(t *testing.T) {
 			t.Errorf("got = %q, want %q", got, want)
 		}
 	})
+}
+
+func TestValidationReference(t *testing.T) {
+	tests := []struct {
+		name string
+		ref  string
+		want bool
+	}{
+		{
+			name: "valid letters and digits",
+			ref:  "ABC123",
+			want: true,
+		},
+		{
+			name: "valid digits",
+			ref:  "123123",
+			want: true,
+		},
+		{
+			name: "too short",
+			ref:  "A12",
+			want: false,
+		},
+		{
+			name: "too long",
+			ref:  "ABC123123",
+			want: false,
+		},
+		{
+			name: "lowercase",
+			ref:  "abc123",
+			want: false,
+		},
+		{
+			name: "punctuation",
+			ref:  "ABC!23",
+			want: false,
+		},
+		{
+			name: "space",
+			ref:  "ABC 23",
+			want: false,
+		},
+		{
+			name: "rus",
+			ref:  "АБС123",
+			want: false,
+		},
+		{
+			name: "unicode",
+			ref:  "Привет",
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := validReference(tt.ref)
+
+			if got != tt.want {
+				t.Errorf("validReference(%q) = %v, want %v", tt.ref, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStringBytesAndRunes(t *testing.T) {
+	s := "Привет"
+
+	got := len(s)
+	want := 12
+	if got != want {
+		t.Errorf("len(%q) = %d, want %d", s, got, want)
+	}
+
+	got = utf8.RuneCountInString(s)
+	want = 6
+	if got != want {
+		t.Errorf("utf8.RuneCountInString(%q) = %d, want %d", s, got, want)
+	}
+
+	ints := make([]int, 0, 6)
+	for i := range s {
+		ints = append(ints, i)
+	}
+
+	intsWant := []int{0, 2, 4, 6, 8, 10}
+	if !slices.Equal(ints, intsWant) {
+		t.Errorf("slices.Equal(%q, %q) = %v, want %v", s, s, ints, intsWant)
+	}
 }

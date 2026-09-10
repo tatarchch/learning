@@ -17,7 +17,7 @@ type Booking struct {
 // New validates the reference, totalAmount and bookedAt and returns a Booking.
 func New(reference string, totalAmount int64, bookedAt time.Time) (Booking, error) {
 
-	if len(reference) != 6 {
+	if !validReference(reference) {
 		return Booking{}, ErrInvalidReference
 	}
 
@@ -90,4 +90,21 @@ func (b *Booking) AddPassenger(name string) {
 
 func (b Booking) Passengers() []string {
 	return slices.Clone(b.passengers)
+}
+
+func validReference(reference string) bool {
+	if len(reference) != 6 {
+		return false
+	}
+
+	for i := range reference {
+		c := reference[i]
+
+		if (c < 'A' || c > 'Z') &&
+			(c < '0' || c > '9') {
+			return false
+		}
+	}
+
+	return true
 }
