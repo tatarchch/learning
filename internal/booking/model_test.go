@@ -1,6 +1,7 @@
 package booking
 
 import (
+	"maps"
 	"testing"
 	"time"
 )
@@ -25,7 +26,7 @@ func TestCopySharesMetadata(t *testing.T) {
 	}
 }
 
-func TestCloneHasIndependentMetadata(t *testing.T) {
+func TestCloneHasIndependentState(t *testing.T) {
 	original, err := New("ABC123", 1000, time.Now())
 
 	if err != nil {
@@ -208,6 +209,85 @@ func TestPassengers(t *testing.T) {
 
 		if got != want {
 			t.Errorf("Passengers()[0]  = %s, want %s", got, want)
+		}
+	})
+}
+
+func TestAllMetadata(t *testing.T) {
+	booking, err := New("ABC123", 2000, time.Now())
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+
+	booking.SetMetadata("source", "web")
+	booking.SetMetadata("device", "mobile")
+
+	metadata := booking.AllMetadata()
+
+	t.Run("test data from AllMetadata()", func(t *testing.T) {
+		got := metadata["source"]
+		want := "web"
+		if got != want {
+			t.Errorf("AllMetadata(%q) = %q, want %q", "source", got, want)
+		}
+
+		got = metadata["device"]
+		want = "mobile"
+		if got != want {
+			t.Errorf("AllMetadata(%q) = %q, want %q", "device", got, want)
+		}
+
+		gotLen := len(metadata)
+		wantLen := 2
+		if gotLen != wantLen {
+			t.Errorf("gotLen = %d, want %d", gotLen, wantLen)
+		}
+	})
+
+	t.Run("test defensive copy", func(t *testing.T) {
+		metadata["source"] = "changed"
+		metadata["new"] = "value"
+
+		got := booking.metadata["source"]
+		want := "web"
+		if got != want {
+			t.Errorf("AllMetadata(%q) = %q, want %q", "source", got, want)
+		}
+
+		got = booking.metadata["new"]
+		want = ""
+		if got != want {
+			t.Errorf("AllMetadata(%q) = %q, want %q", "new", got, want)
+		}
+	})
+}
+
+func TestMapAssigment(t *testing.T) {
+	original := map[string]string{
+		"source": "web",
+	}
+
+	t.Run("test aliasing have a shared state", func(t *testing.T) {
+		alias := original
+		alias["source"] = "api"
+
+		got := original["source"]
+		want := "api"
+		if got != want {
+			t.Errorf("got = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("test clone haven`t a shared state", func(t *testing.T) {
+		original["source"] = "web"
+
+		clone := maps.Clone(original)
+		clone["source"] = "api"
+
+		got := original["source"]
+		want := "web"
+		if got != want {
+			t.Errorf("got = %q, want %q", got, want)
 		}
 	})
 }

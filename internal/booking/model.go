@@ -80,6 +80,10 @@ func (b Booking) ClearedMetadata() Booking {
 	return b
 }
 
+func (b Booking) AllMetadata() map[string]string {
+	return maps.Clone(b.metadata)
+}
+
 func (b *Booking) AddPassenger(name string) {
 	b.passengers = append(b.passengers, name)
 }
