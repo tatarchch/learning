@@ -97,7 +97,7 @@ func validReference(reference string) bool {
 		return false
 	}
 
-	for i := range reference {
+	for i := 0; i < len(reference); i++ {
 		c := reference[i]
 
 		if (c < 'A' || c > 'Z') &&
