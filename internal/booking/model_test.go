@@ -379,13 +379,13 @@ func TestStringBytesAndRunes(t *testing.T) {
 		t.Errorf("utf8.RuneCountInString(%q) = %d, want %d", s, got, want)
 	}
 
-	ints := make([]int, 0, 6)
+	offsets := make([]int, 0, 6)
 	for i := range s {
-		ints = append(ints, i)
+		offsets = append(offsets, i)
 	}
 
-	intsWant := []int{0, 2, 4, 6, 8, 10}
-	if !slices.Equal(ints, intsWant) {
-		t.Errorf("slices.Equal(%q, %q) = %v, want %v", s, s, ints, intsWant)
+	wantOffsets := []int{0, 2, 4, 6, 8, 10}
+	if !slices.Equal(offsets, wantOffsets) {
+		t.Errorf("range indexes = %v, want %v", offsets, wantOffsets)
 	}
 }
