@@ -248,13 +248,13 @@ func TestAllMetadata(t *testing.T) {
 		metadata["source"] = "changed"
 		metadata["new"] = "value"
 
-		got := booking.metadata["source"]
+		got := booking.Metadata("source")
 		want := "web"
 		if got != want {
 			t.Errorf("AllMetadata(%q) = %q, want %q", "source", got, want)
 		}
 
-		got = booking.metadata["new"]
+		got = booking.Metadata("new")
 		want = ""
 		if got != want {
 			t.Errorf("AllMetadata(%q) = %q, want %q", "new", got, want)
@@ -262,12 +262,12 @@ func TestAllMetadata(t *testing.T) {
 	})
 }
 
-func TestMapAssigment(t *testing.T) {
+func TestMapAssignment(t *testing.T) {
 	original := map[string]string{
 		"source": "web",
 	}
 
-	t.Run("test aliasing have a shared state", func(t *testing.T) {
+	t.Run("assignment shares state", func(t *testing.T) {
 		alias := original
 		alias["source"] = "api"
 
@@ -278,7 +278,7 @@ func TestMapAssigment(t *testing.T) {
 		}
 	})
 
-	t.Run("test clone haven`t a shared state", func(t *testing.T) {
+	t.Run("clone has independent state", func(t *testing.T) {
 		original["source"] = "web"
 
 		clone := maps.Clone(original)
@@ -286,6 +286,12 @@ func TestMapAssigment(t *testing.T) {
 
 		got := original["source"]
 		want := "web"
+		if got != want {
+			t.Errorf("got = %q, want %q", got, want)
+		}
+
+		got = clone["source"]
+		want = "api"
 		if got != want {
 			t.Errorf("got = %q, want %q", got, want)
 		}
